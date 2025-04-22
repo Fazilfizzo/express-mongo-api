@@ -4,7 +4,7 @@ import Subject from '../models/Subject.js';
 const router = express.Router();
 
 // GET /subjects - List all subjects grouped by academic year
-router.get('/subjects', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const allSubjects = await Subject.find();
 

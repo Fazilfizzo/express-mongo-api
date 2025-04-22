@@ -4,7 +4,7 @@ import Student from '../models/Student.js';
 const router = express.Router();
 
 // GET /students
-router.get('/students', async (req, res) => {
+router.get('/', async (req, res) => {
   const students = await Student.find();
   res.json(students);
 });
