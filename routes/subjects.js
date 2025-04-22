@@ -4,7 +4,7 @@ import Subject from '../models/Subject.js';
 const router = express.Router();
 
 // GET /subjects
-router.get('/', async (req, res) => {
+router.get('/subjects', async (req, res) => {
   const allSubjects = await Subject.find();
   const grouped = {};
 
