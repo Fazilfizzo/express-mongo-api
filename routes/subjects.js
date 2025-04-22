@@ -3,16 +3,25 @@ import Subject from '../models/Subject.js';
 
 const router = express.Router();
 
-// GET /subjects
+// GET /subjects - List all subjects grouped by academic year
 router.get('/subjects', async (req, res) => {
-  const allSubjects = await Subject.find();
-  const grouped = {};
+  try {
+    const allSubjects = await Subject.find();
 
-  for (let i = 1; i <= 4; i++) {
-    grouped[`Year ${i}`] = allSubjects.filter(s => s.year === i).map(s => s.name);
+    const groupedByYear = allSubjects.reduce((acc, subject) => {
+      const yearKey = `Year ${subject.year}`;
+      if (!acc[yearKey]) {
+        acc[yearKey] = [];
+      }
+      acc[yearKey].push(subject.name);
+      return acc;
+    }, {});
+
+    res.status(200).json(groupedByYear);
+  } catch (error) {
+    console.error('Error fetching subjects:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  res.json(grouped);
 });
 
 export default router;
