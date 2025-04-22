@@ -16,6 +16,6 @@ mongoose.connect(MONGO_URI)
 app.use('/students', studentRoutes);
 app.use('/subjects', subjectRoutes);
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
