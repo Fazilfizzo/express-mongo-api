@@ -50,4 +50,32 @@ node seed.js
 GET	/students get all students
 GET	/subjects get all subjects
 
+## Server Management Scripts
+
+### 1. `health_check.sh`
+Monitors system health and checks if the Express API is running correctly.
+- Logs CPU, memory, and disk usage
+- Confirms Nginx/Apache is active
+- Tests `/students` and `/subjects` endpoints for 200 OK
+- Logs results to `/var/log/server_health.log`
+
+### 2. `backup_api.sh`
+Creates a compressed backup of:
+- API source code directory
+- MongoDB database using `mongodump`
+- Saved to `/home/ubuntu/backups`
+
+### 3. `update_server.sh`
+Automates server and API updates:
+- Updates Ubuntu package list and upgrades installed packages
+- Pulls the latest changes from your GitHub repository
+- Restarts the web server (Nginx/Apache)
+- Logs the process to `/var/log/update.log`
+
+### Setup Instructions
+
+1. **Grant execute permissions to the scripts:**
+   ```bash
+   chmod +x bash_scripts/*.sh
+```
 
