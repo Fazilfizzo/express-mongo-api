@@ -47,8 +47,8 @@ node seed.js
 ```
 
 **API Endpoints**
-GET	/students get all students
-GET	/subjects get all subjects
+GET	/api/students get all students
+GET	/api/subjects get all subjects
 
 ## Server Management Scripts
 
@@ -56,7 +56,7 @@ GET	/subjects get all subjects
 Monitors system health and checks if the Express API is running correctly.
 - Logs CPU, memory, and disk usage
 - Confirms Nginx/Apache is active
-- Tests `/students` and `/subjects` endpoints for 200 OK
+- Tests `/api/students` and `/api/subjects` endpoints for 200 OK
 - Logs results to `/var/log/server_health.log`
 
 ### 2. `backup_api.sh`
