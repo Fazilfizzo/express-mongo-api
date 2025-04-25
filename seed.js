@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import Student from './models/Student.js';
 import Subject from './models/Subject.js';
 
-const MONGO_URI = ;
+const MONGO_URI = process.env.MONGO_URI;
 
 const seed = async () => {
   try {
