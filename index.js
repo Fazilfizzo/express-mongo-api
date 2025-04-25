@@ -4,10 +4,11 @@ import studentRoutes from './routes/students.js';
 import subjectRoutes from './routes/subjects.js';
 
 const app = express();
-const PORT = 3000;
+dotenv.config();
+const PORT = process.env.PORT;
 
 // MongoDB connection (No .env used)
-const MONGO_URI = 'mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
