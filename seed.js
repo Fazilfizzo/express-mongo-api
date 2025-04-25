@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import Student from './models/Student.js';
 import Subject from './models/Subject.js';
 
+dotenv.config();
+
 const MONGO_URI = process.env.MONGO_URI;
 
 const seed = async () => {
