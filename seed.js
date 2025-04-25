@@ -1,8 +1,9 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import Student from './models/Student.js';
 import Subject from './models/Subject.js';
 
-const MONGO_URI = 'mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGO_URI = ;
 
 const seed = async () => {
   try {
