@@ -50,6 +50,8 @@ node seed.js
 GET	/api/students get all students
 GET	/api/subjects get all subjects
 
+
+
 ## Server Management Scripts
 
 ### 1. `health_check.sh`
@@ -77,5 +79,39 @@ Automates server and API updates:
 1. **Grant execute permissions to the scripts:**
    ```bash
    chmod +x bash_scripts/*.sh
+``
+
+
+
+## Docker Setup
+
+###  Build the image
+```bash
+docker build express-mongo-api
 ```
 
+###  Run the container
+docker run -d -p 3000:3000 --name api-container express-mongo-api
+
+### Docker compose
+docker-compose up -d
+
+
+## Docker Registry Upload
+1. Log in to Docker Hub:
+```bash
+docker login
+```
+
+## Tag your image:
+docker tag express-mongo-api fazilfizo/express-mongo-api:latest
+
+## Push to Docker Hub
+docker push fazilfizo/express-mongo-api:latest
+
+## Docker Image  
+- **Docker Hub URL**: (https://hub.docker.com/r/fazilfizo/express-mongo-api)  
+- Pull command:  
+  ```bash
+  docker pull fazilfizo/express-mongo-api
+```
