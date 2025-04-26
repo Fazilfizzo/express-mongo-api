@@ -6,7 +6,7 @@ import subjectRoutes from './routes/subjects.js';
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || process.env.PORT1;
 
 
 const MONGO_URI = process.env.MONGO_URI;
