@@ -4,7 +4,7 @@ services:
   api:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       MONGO_URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     command: sh -c "node seed.js && node index.js"  
