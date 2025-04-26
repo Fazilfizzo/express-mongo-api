@@ -7,5 +7,18 @@ services:
       - "3001:3000"
     environment:
       MONGO_URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-    command: sh -c "node seed.js && node index.js"  
+    command: sh -c "node seed.js && node index.js"
     restart: unless-stopped
+    depends_on:
+      - mongodb  # Only needed if using local MongoDB
+
+  # Add this if you want local MongoDB instead of Atlas
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
