@@ -11,7 +11,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - backend
+      - app-network
     restart: unless-stopped
 
   mongodb:
@@ -24,42 +24,34 @@ services:
       - backend
 
   frontend1:
-    image: fazilfizo/express-mongo-api:latest
+    image: fazilfizo/express-mongo-api:v2
     environment:
-      - PORT=3003
       - VITE_API_URL=http://api:3000
       - VITE_NODE_ID=frontend1
-      - PORT=5173
     ports:
       - "3003:5173"
     networks:
-      - frontend
-      - backend
+      - app-network
 
   frontend2:
-    image: fazilfizo/express-mongo-api:latest
+    image: fazilfizo/express-mongo-api:v2
     environment:
-      - PORT=3004
       - VITE_API_URL=http://api:3000
       - VITE_NODE_ID=frontend2
-      - PORT=5173
     ports:
       - "3004:5173"
     networks:
-      - frontend
-      - backend
-
+      - app-network
+      
   frontend3:
-    image: fazilfizo/express-mongo-api:latest
+    image: fazilfizo/express-mongo-api:v2
     environment:
       - VITE_API_URL=http://api:3000
       - VITE_NODE_ID=frontend3
-      - PORT=5173
     ports:
       - "3005:5173"
     networks:
-      - frontend
-      - backend
+      - app-network
 
   loadbalancer:
     image: nginx:alpine
@@ -72,12 +64,11 @@ services:
       - frontend2
       - frontend3
     networks:
-      - frontend
+      - app-network
     restart: unless-stopped
 
 networks:
-  frontend:
-  backend:
+  app-network:
     driver: bridge
 
 volumes:
