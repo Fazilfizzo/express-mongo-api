@@ -112,6 +112,60 @@ docker push fazilfizo/express-mongo-api:latest
 ## Docker Image  
 - **Docker Hub URL**: (https://hub.docker.com/r/fazilfizo/express-mongo-api)  
 - Pull command:  
-  ```bash
-  docker pull fazilfizo/express-mongo-api
+```bash
+docker pull fazilfizo/express-mongo-api
 ```
+
+### Building and Running Frontend Containers
+#1. Build frontend image
+```bash
+cd frontend-UI
+```
+```bash
+docker build -t fazilfizo/express-mongo-api:v2 .
+```
+
+# 2. Run three instances
+docker run -d -p 3003:5173 -e VITE_NODE_ID=frontend1 fazilfizo/express-mongo-api:v2
+docker run -d -p 3004:5173 -e VITE_NODE_ID=frontend2 fazilfizo/express-mongo-api:v2
+docker run -d -p 3005:5173 -e VITE_NODE_ID=frontend3 fazilfizo/express-mongo-api:v2
+
+
+###Load-balancing(nginx-load-balancer.conf)
+upstream frontend {
+    # Round-robin is default
+    server frontend1:5173 max_fails=3 fail_timeout=30s; # Health checks
+    server frontend2:5173 max_fails=3 fail_timeout=30s;
+    server frontend3:5173 max_fails=3 fail_timeout=30s;
+}
+
+server {
+    listen 80;
+    server_name aws_public_ip;  //replace aws_public_ip with aws public ip you have
+    location /health {  # Health check endpoint
+        return 200 'OK';
+    }
+}
+
+# On EC2 Ubuntu instance:
+
+```bash
+git clone https://github.com/Fazilfizzo/express-mongo-api.git
+cd express-mongo-api
+docker-compose pull                           //pulling latest docker changes(up-to-date)
+docker-compose up -d                          //run the docker container
+```
+
+### 🐛 Troubleshooting
+# Issue	Solution
+Frontend not loading -	Check container logs: docker logs frontend1
+No X-Node-ID header  -	Verify NGINX config has proxy_set_header X-Node-ID $hostname
+502 Bad Gateway -	      1. Check health: curl http://localhost/health
+                        2. Verify containers: docker ps
+API connection failed -	Confirm MongoDB Atlas IP whitelisting
+
+
+# Push Docker images
+docker fazilfizo/express-mongo-api:v2
+docker tag fazilfizo/express-mongo-api:v2 fazilfizo/express-mongo-api:latest
+docker push fazilfizo/express-mongo-api:v2
