@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('');
-
+  const apiUrl = import.meta.env.VITE_API_URL
   // Fetch node ID when component mounts
   useEffect(() => {
     const fetchNodeId = async () => {
@@ -28,7 +28,7 @@ function App() {
     setError('');
     setActiveTab('students');
     try {
-      const response = await fetch('/api/students');
+      const response = await fetch(`${apiUrl}/api/students`);
       if (!response.ok) throw new Error('Failed to fetch students');
       
       const result = await response.json();
@@ -46,7 +46,7 @@ function App() {
     setError('');
     setActiveTab('subjects');
     try {
-      const response = await fetch('/api/subjects');
+      const response = await fetch(`${apiUrl}/api/subjects`);
       if (!response.ok) throw new Error('Failed to fetch subjects');
       
       const result = await response.json();
