@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import dotenv from 'dotenv';
 import './App.css';
 
 function App() {
@@ -12,7 +11,7 @@ function App() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`http://<YOUR_API_IP>:${process.env.REACT_APP_API_PORT}/api/${endpoint}`);
+      const response = await fetch(`/api/${endpoint}`);
       if (!response.ok) throw new Error('Network response was not ok');
       
       const nodeId = response.headers.get('X-Node-ID');
