@@ -26,10 +26,12 @@ A simple RESTful API built with **Node.js**, **Express**, and **MongoDB Atlas**,
 git clone https://github.com/YOUR_USERNAME/express-mongo-api.git
 cd express-mongo-api
 ```
+
 2. **Install the dependencies**
    ```bash
    npm install
    ```
+   
 3. ** Create a .env file: **
   ``` ini
  PORT=3000
@@ -81,8 +83,6 @@ Automates server and API updates:
    chmod +x bash_scripts/*.sh
 ``
 
-
-
 ## Docker Setup
 
 ###  Build the image
@@ -91,11 +91,14 @@ docker build express-mongo-api
 ```
 
 ###  Run the container
+```bash
 docker run -d -p 3000:3000 --name api-container express-mongo-api
+```
 
 ### Docker compose
+```bash
 docker-compose up -d
-
+```
 
 ## Docker Registry Upload
 1. Log in to Docker Hub:
@@ -126,12 +129,14 @@ docker build -t fazilfizo/express-mongo-api:v2 .
 ```
 
 # 2. Run three instances
+```bash
 docker run -d -p 3003:5173 -e VITE_NODE_ID=frontend1 fazilfizo/express-mongo-api:v2
 docker run -d -p 3004:5173 -e VITE_NODE_ID=frontend2 fazilfizo/express-mongo-api:v2
 docker run -d -p 3005:5173 -e VITE_NODE_ID=frontend3 fazilfizo/express-mongo-api:v2
-
+```
 
 ###Load-balancing(nginx-load-balancer.conf)
+```.conf 
 upstream frontend {
     # Round-robin is default
     server frontend1:5173 max_fails=3 fail_timeout=30s; # Health checks
@@ -146,6 +151,7 @@ server {
         return 200 'OK';
     }
 }
+```
 
 # On EC2 Ubuntu instance:
 
@@ -158,14 +164,17 @@ docker-compose up -d                          //run the docker container
 
 ### 🐛 Troubleshooting
 # Issue	Solution
+```
 Frontend not loading -	Check container logs: docker logs frontend1
 No X-Node-ID header  -	Verify NGINX config has proxy_set_header X-Node-ID $hostname
 502 Bad Gateway -	      1. Check health: curl http://localhost/health
                         2. Verify containers: docker ps
 API connection failed -	Confirm MongoDB Atlas IP whitelisting
-
+```
 
 # Push Docker images
+```bash
 docker fazilfizo/express-mongo-api:v2
 docker tag fazilfizo/express-mongo-api:v2 fazilfizo/express-mongo-api:latest
 docker push fazilfizo/express-mongo-api:v2
+```
