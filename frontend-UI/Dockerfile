@@ -1,9 +1,10 @@
 # Build stage
-FROM node:16-alpine as build
+FROM node:18 AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN npm run build
 
 # Production stage

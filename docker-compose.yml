@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api:
-    build: .
+    image: fazilfizo/express-mongo-api:latest
     environment:
       -MONGO-URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       -NODE-ID: api-server
@@ -12,6 +12,7 @@ services:
       - mongodb
     networks:
       - backend
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
@@ -23,7 +24,7 @@ services:
       - backend
 
   frontend1:
-    build: ./frontend-UI
+    image: fazilfizo/express-mongo-api:latest
     environment:
       - PORT=3003
       - VITE_API_URL=http://api:3000
@@ -36,7 +37,7 @@ services:
       - backend
 
   frontend2:
-    build: ./frontend-UI
+    image: fazilfizo/express-mongo-api:latest
     environment:
       - PORT=3004
       - VITE_API_URL=http://api:3000
@@ -49,7 +50,7 @@ services:
       - backend
 
   frontend3:
-    build: ./frontend-UI
+    image: fazilfizo/express-mongo-api:latest
     environment:
       - VITE_API_URL=http://api:3000
       - VITE_NODE_ID=frontend3
@@ -72,10 +73,12 @@ services:
       - frontend3
     networks:
       - frontend
+    restart: unless-stopped
 
 networks:
   frontend:
   backend:
+    driver: bridge
 
 volumes:
   mongo-data:
