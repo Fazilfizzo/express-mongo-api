@@ -18,7 +18,13 @@ mongoose.connect(MONGO_URI)
   app.use(express.json());
 
   app.get('/', (req, res) => {
+    res.setHeader('X-Node-ID', process.env.NODE_ID || 'api');
     res.send('API is running');
+  });
+
+  app.get('/api/node', (req, res) => {
+    res.setHeader('X-Node-ID', process.env.NODE_ID || 'api');
+    res.json({ message: 'Node information' });
   });
 
 app.use('/api/students', studentRoutes);

@@ -2,23 +2,56 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [data, setData] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [nodeId, setNodeId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('');
 
-  const fetchData = async (endpoint) => {
+  // Fetch node ID when component mounts
+  useEffect(() => {
+    const fetchNodeId = async () => {
+      try {
+        const response = await fetch('/api/node');
+        const nodeId = response.headers.get('X-Node-ID');
+        if (nodeId) setNodeId(nodeId);
+      } catch (err) {
+        console.error('Error fetching node ID:', err);
+      }
+    };
+    fetchNodeId();
+  }, []);
+
+  const fetchStudents = async () => {
     setLoading(true);
     setError('');
+    setActiveTab('students');
     try {
-      const response = await fetch(`/api/${endpoint}`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      
-      const nodeId = response.headers.get('X-Node-ID');
-      if (nodeId) setNodeId(nodeId);
+      const response = await fetch('/api/students');
+      if (!response.ok) throw new Error('Failed to fetch students');
       
       const result = await response.json();
-      setData(result);
+      setStudents(result.data || result); // Handle both formats
+      setSubjects([]); // Clear subjects data
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSubjects = async () => {
+    setLoading(true);
+    setError('');
+    setActiveTab('subjects');
+    try {
+      const response = await fetch('/api/subjects');
+      if (!response.ok) throw new Error('Failed to fetch subjects');
+      
+      const result = await response.json();
+      setSubjects(result.data || result); // Handle both formats
+      setStudents([]); // Clear students data
     } catch (err) {
       setError(err.message);
     } finally {
@@ -33,37 +66,42 @@ function App() {
         {nodeId && <p>Served by: {nodeId}</p>}
         
         <div className="buttons">
-          <button onClick={() => fetchData('students')}>Students</button>
-          <button onClick={() => fetchData('subjects')}>Courses</button>
+          <button onClick={fetchStudents} disabled={loading}>
+            Students
+          </button>
+          <button onClick={fetchSubjects} disabled={loading}>
+            Courses
+          </button>
         </div>
         
         {loading && <p>Loading...</p>}
         {error && <p className="error">Error: {error}</p>}
         
         <div className="data-container">
-          {data && Array.isArray(data) && (
-            <ul>
-              {data.map((student, index) => (
-                <li key={index}>
-                  {student.name} - {student.enrolledProgram}
-                </li>
-              ))}
-            </ul>
+          {activeTab === 'students' && students.length > 0 && (
+            <>
+              <h2>Students List</h2>
+              <ul>
+                {students.map((student, index) => (
+                  <li key={index}>
+                    {student.name} - {student.enrolledProgram || student.program}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
           
-          {data && !Array.isArray(data) && (
-            <div>
-              {Object.entries(data).map(([year, subjects]) => (
-                <div key={year}>
-                  <h3>{year}</h3>
-                  <ul>
-                    {subjects.map((subject, idx) => (
-                      <li key={idx}>{subject}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          {activeTab === 'subjects' && subjects.length > 0 && (
+            <>
+              <h2>Software Engineering Courses</h2>
+              <ul>
+                {subjects.map((subject, index) => (
+                  <li key={index}>
+                    {subject.name} - Year {subject.year}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       </header>
