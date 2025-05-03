@@ -1,73 +1,73 @@
 version: '3.8'
 
 services:
-  # Load Balancer
-  lb:
-    image: nginx:alpine
+  api:
+    build: .
+    environment:
+      -MONGO-URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    ports:
+      - "3001:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    ports:
+     - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - backend
+
+  frontend1:
+    image: yourdockerhubusername/frontend-ui
+    environment:
+      - PORT=3003
+      - REACT_APP_API_URL=http://api:3000
+    ports:
+      - "3003:3003"
+    networks:
+      - frontend
+      - backend
+
+  frontend2:
+    image: yourdockerhubusername/frontend-ui
+    environment:
+      - PORT=3004
+      - REACT_APP_API_URL=http://api:3000
+    ports:
+      - "3004:3004"
+    networks:
+      - frontend
+      - backend
+
+  frontend3:
+    image: yourdockerhubusername/frontend-ui
+    environment:
+      - PORT=3005
+      - REACT_APP_API_URL=http://api:3000
+    ports:
+      - "3005:3005"
+    networks:
+      - frontend
+      - backend
+
+  loadbalancer:
+    build: ./load-balancer
     ports:
       - "80:80"
-    volumes:
-      - ./nginx-load-balancer.conf:/etc/nginx/nginx.conf
     depends_on:
       - frontend1
       - frontend2
       - frontend3
     networks:
-      - app-network
-
-  # Frontend instances (3 replicas)
-  frontend1:
-    build: ./frontend-UI
-    environment:
-      - NODE_ID=frontend1
-    networks:
-      - app-network
-    depends_on:
-      - api
-
-  frontend2:
-    build: ./frontend-UI
-    environment:
-      - NODE_ID=frontend2
-    networks:
-      - app-network
-    depends_on:
-      - api
-
-  frontend3:
-    build: ./frontend-UI
-    environment:
-      - NODE_ID=frontend3
-    networks:
-      - app-network
-    depends_on:
-      - api
-
-  # Your existing API service
-  api:
-    build: .
-    ports:
-      - "3001:3000"
-    environment:
-      MONGO_URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-    command: sh -c "node seed.js && node index.js"
-    restart: unless-stopped
-    networks:
-      - app-network
-
-  # Local MongoDB (optional - you're using Atlas)
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - app-network
-
-volumes:
-  mongodb_data:
+      - frontend
 
 networks:
-  app-network:
-    driver: bridge
+  frontend:
+  backend:
+
+volumes:
+  mongo-data:
