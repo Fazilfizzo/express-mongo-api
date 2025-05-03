@@ -5,7 +5,7 @@ services:
     build: .
     environment:
       -MONGO-URI: mongodb+srv://fazil:fazil3456@cluster0.c0zuz3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      -NODE-API: api-server
+      -NODE-ID: api-server
     ports:
       - "3001:3000"
     depends_on:

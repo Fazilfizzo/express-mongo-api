@@ -9,16 +9,19 @@ function App() {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('');
   const apiUrl = import.meta.env.VITE_API_URL
+
   // Fetch node ID when component mounts
   useEffect(() => {
+    // 1. First try to get own frontend ID (from build-time env)
+    if (import.meta.env.VITE_NODE_ID) {
+      setNodeId(import.meta.env.VITE_NODE_ID);
+      return;
+    }
+    
+    // 2. Fallback to API header
     const fetchNodeId = async () => {
-      try {
-        const response = await fetch('/api/node');
-        const nodeId = response.headers.get('X-Node-ID');
-        if (nodeId) setNodeId(nodeId);
-      } catch (err) {
-        console.error('Error fetching node ID:', err);
-      }
+      const res = await fetch('/api/node');
+      setNodeId(res.headers.get('X-Node-ID') || 'unknown');
     };
     fetchNodeId();
   }, []);
